@@ -1,0 +1,125 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+	<h1 id="title">Dashboard <small style="font-size: 27px; color:grey;"> Welcome, {{name}}...</small></h1>
+	<button class="btn btn-primary" data-toggle="modal" data-target="#modal-add"><i class="fas fa-plus"></i> Create reminder</button>
+
+	<div class="modal fade" id="modal-add" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Create Reminder</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div><!--header-->
+				<div class="modal-body">
+					<form method="POST" action="/r/create">
+						<div class="form-group">
+							<label class="bold" for="title">Title</label>
+							<input type="text" class="form-control" required name="title" maxlength="250" placeholder="Title">
+						</div>
+						<div class="form-group">
+							<label class="bold" for="create-reminder">Reminder</label>
+							<textarea name="create-reminder" maxlength="10000" class="form-control"></textarea>
+							<script>
+								CKEDITOR.replace('create-reminder');
+							</script>
+						</div>
+						<div class="form-group">
+							<label class="bold" for="date">Date</label>
+							<input type="date"  class="form-control" required name="date" placeholder="Date">
+						</div>
+						<div class="modal-footer">
+							<a class="nav-link mr-auto" href="#" data-dismiss="modal">Close</a>
+							<button class="btn btn-primary" type="submit"><i class="fas fa-sign-in-alt"></i> Create</button>
+						</div>
+					</form>
+				</div><!--body-->
+			</div><!--content-->
+		</div>
+	</div> <!--create reminder-->
+
+	<div class="modal fade" id="modal-edit">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Edit reminder</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<form id="edit-form" method="POST" action="">
+						<div class="form-group">
+							<label class="bold" for="title">Title</label>
+							<input type="text" name="title" class="form-control" id="edit-title" required maxlength="250" placeholder="Title">
+						</div>
+						<div class="form-group">
+								<label class="bold" for="reminder">Reminder</label>
+								<textarea name="edit-reminder" class="form-control" id="edit-reminder" maxlength="10000"></textarea>
+								<script>
+									CKEDITOR.replace('edit-reminder');
+								</script>
+							</div>
+						<div class="form-group">
+							<label class="bold" for="date">Date</label>
+							<input type="date" name="date" class="form-control" id="edit-date" required placeholder="Date">
+						</div>
+						<div class="modal-footer">
+							<a class="nav-link mr-auto" href="#" data-dismiss="modal">Close</a>
+							<button class="btn btn-primary" type="submit"><i class="fas fa-sign-in-alt"></i> Edit</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div> <!--edit reminder-->
+
+    <hr style="border-color: transparent;">
+
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th scope="col">#</th>
+				<th scope="col">Title</th>
+				<th scope="col">Reminder</th>
+				<th scope="col">Completed</th>
+				<th scope="col">Due</th>
+				<th scope="col"><i class="fas fa-check"></i> Complete</th>
+				<th scope"col"><i class="fas fa-edit"></i> Edit</th>
+				<th scope"col"><i class="fas fa-trash"></i> Delete</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for reminder in reminders %}
+				<tr id="r-{{reminder.id}}">
+					<th>{{reminder.id}}</th>
+					<td><a href="/r/{{reminder.id}}">{{reminder.title}}</a></td>
+					<input type="hidden" id="title-{{reminder.id}}" value="{{reminder.title}}">
+					<td>{{reminder.reminder | safe}}</td>
+					<input type="hidden" id="reminder-{{reminder.id}}" value="{{reminder.reminder | safe}}">
+					<td><p id="completed-{{reminder.id}}">{{reminder.completed}}</p></td>
+					<td>{{reminder.date}}</td>
+					<input type="hidden" id="date-{{reminder.id}}" value="{{reminder.date}}">
+					<td>
+						<div class="custom-control custom-checkbox">
+							{% if reminder.completed == "Yes" %}
+								<input type="checkbox" class="custom-control-input check-complete pointer" checked id="{{reminder.id}}">
+								<label class="custom-control-label pointer" for="{{reminder.id}}">Complete</label>
+							{% endif %}
+
+							{% if reminder.completed == "No" %}
+								<input type="checkbox" class="custom-control-input check-complete pointer" id="{{reminder.id}}">
+								<label class="custom-control-label pointer" for="{{reminder.id}}">Complete</label>
+							{% endif %}
+						</div>
+					</td>
+					<td><button class="btn btn-info update-btn pull-right" id="{{reminder.id}}"><i class="fas fa-edit"></i> Edit</button></td>
+					<td><button class="btn btn-danger delete-btn" id="{{reminder.id}}"><i class="fas fa-trash"></i> Delete</button></td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
+{% endblock %}

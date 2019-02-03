@@ -1,0 +1,20 @@
+.pointer {
+    cursor:pointer;
+}
+
+.hidden {
+    visibility:hidden;
+}
+
+.btn-spacer {
+    margin-right:15px; 
+}
+
+.bold {
+    font-style:bold;
+    font-weight:600;
+}
+
+.black {
+    color: #000000;
+}
